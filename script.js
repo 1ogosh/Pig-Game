@@ -21,7 +21,13 @@ const totalScores = [0, 0];
 let currentScore = 0;
 let activePlayer = 0;
 
-
+const switchActivePlayer = function () {
+        currentScore = 0;
+        document.getElementById(`current--${activePlayer}`).textContent = currentScore;
+        activePlayer = activePlayer === 0 ? 1 : 0;
+        player0Element.classList.toggle('player--active');
+        player1Element.classList.toggle('player--active');
+}
 //Roll the dice
 
 btnRoll.addEventListener('click', function () {
@@ -40,12 +46,22 @@ btnRoll.addEventListener('click', function () {
                 currentScore += diceNumber;
                 document.getElementById(`current--${activePlayer}`).textContent = currentScore;
         } else {
-                currentScore = 0;
-                document.getElementById(`current--${activePlayer}`).textContent = currentScore;
-                activePlayer = activePlayer === 0 ? 1 : 0;
-                player0Element.classList.toggle('player--active');
-                player1Element.classList.toggle('player--active');
+                switchActivePlayer();
         }
+});
+
+btnHold.addEventListener('click', function () {
+        //Add current score to active player total score
+        totalScores[activePlayer] += currentScore;
+        document.getElementById(`score--${activePlayer}`).textContent = totalScores[activePlayer];
+        //If total score of active player >= 100, active player won, if not - switch active player
+        if (totalScores[activePlayer] >= 20) {
+                document.querySelector(`.player--${activePlayer}`).classList.add('player--winner');
+                document.querySelector(`.player--${activePlayer}`).classList.remove('player--active');
+        } else {
+                switchActivePlayer();
+        }
+
 
 });
 
